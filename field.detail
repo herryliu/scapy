@@ -1,0 +1,323 @@
+class Field:
+class Emph:
+class ActionField:
+class ConditionalField:
+class PadField:
+class MACField(Field):
+class IPField(Field):
+class SourceIPField(IPField):
+class ByteField(Field):
+class XByteField(ByteField):
+class OByteField(ByteField):
+class X3BytesField(XByteField):
+class ThreeBytesField(X3BytesField, ByteField):
+class ShortField(Field):
+class SignedShortField(Field):
+class LEShortField(Field):
+class XShortField(ShortField):
+class IntField(Field):
+class SignedIntField(Field):
+class LEIntField(Field):
+class LESignedIntField(Field):
+class XIntField(IntField):
+class LongField(Field):
+class XLongField(LongField):
+class IEEEFloatField(Field):
+class IEEEDoubleField(Field):
+class StrField(Field):
+class PacketField(StrField):
+class PacketLenField(PacketField):
+class PacketListField(PacketField):
+class StrFixedLenField(StrField):
+class StrFixedLenEnumField(StrFixedLenField):
+class NetBIOSNameField(StrFixedLenField):
+class StrLenField(StrField):
+class BoundStrLenField(StrLenField):
+class FieldListField(Field):
+class FieldLenField(Field):
+class StrNullField(StrField):
+class StrStopField(StrField):
+class LenField(Field):
+class BCDFloatField(Field):
+class BitField(Field):
+class BitFieldLenField(BitField):
+class XBitField(BitField):
+class EnumField(Field):
+class CharEnumField(EnumField):
+class BitEnumField(BitField,EnumField):
+class ShortEnumField(EnumField):
+class LEShortEnumField(EnumField):
+class ByteEnumField(EnumField):
+class IntEnumField(EnumField):
+class SignedIntEnumField(EnumField):
+class LEIntEnumField(EnumField):
+class XShortEnumField(ShortEnumField):
+class MultiEnumField(EnumField):
+class BitMultiEnumField(BitField,MultiEnumField):
+class ByteEnumKeysField(ByteEnumField):
+class ShortEnumKeysField(ShortEnumField):
+class IntEnumKeysField(IntEnumField):
+class LELongField(Field):
+class LEFieldLenField(FieldLenField):
+class FlagsField(BitField):
+class FixedPointField(BitField):
+class _IPPrefixFieldBase(Field):
+class IPPrefixField(_IPPrefixFieldBase):
+class IP6PrefixField(_IPPrefixFieldBase):
+
+===========================================================
+class Field:
+    (not sure) - use __slot__ instead of __dict__ for better mem space and control attribute
+    - asssume network byte order
+    - save length under self.sz
+    - elf.owners --> the class owns the field
+    - Field is to define the field format and default vlaue (not to hold the data instead it can
+      get the data out according to the format)
+    def __init__(self, name, default, fmt="H"):
+    def register_owner(self, cls):
+    def i2len(self, pkt, x):
+    def i2count(self, pkt, x):
+    def h2i(self, pkt, x):
+    def i2h(self, pkt, x):
+    def m2i(self, pkt, x):
+    def i2m(self, pkt, x):
+    def any2i(self, pkt, x):
+    def i2repr(self, pkt, x):
+    def addfield(self, pkt, s, val):
+    def getfield(self, pkt, s):
+    def do_copy(self, x):
+    def __repr__(self):
+    def copy(self):
+    def randval(self):
+class Emph:
+    def __init__(self, fld):
+    def __getattr__(self, attr):
+    def __hash__(self):
+    def __eq__(self, other):
+class ActionField:
+    def __init__(self, fld, action_method, **kargs):
+    def any2i(self, pkt, val):
+    def __getattr__(self, attr):
+class ConditionalField:
+    def __init__(self, fld, cond):
+    def _evalcond(self,pkt):
+    def getfield(self, pkt, s):
+    def addfield(self, pkt, s, val):
+    def __getattr__(self, attr):
+class PadField:
+    def __init__(self, fld, align, padwith=None):
+    def padlen(self, flen):
+    def getfield(self, pkt, s):
+    def addfield(self, pkt, s, val):
+    def __getattr__(self, attr):
+class MACField(Field):
+    def __init__(self, name, default):
+    def i2m(self, pkt, x):
+    def m2i(self, pkt, x):
+    def any2i(self, pkt, x):
+    def i2repr(self, pkt, x):
+    def randval(self):
+class IPField(Field):
+    def __init__(self, name, default):
+    def h2i(self, pkt, x):
+    def resolve(self, x):
+    def i2m(self, pkt, x):
+    def m2i(self, pkt, x):
+    def any2i(self, pkt, x):
+    def i2repr(self, pkt, x):
+    def randval(self):
+class SourceIPField(IPField):
+    def __init__(self, name, dstname):
+    def i2m(self, pkt, x):
+    def i2h(self, pkt, x):
+class ByteField(Field):
+    def __init__(self, name, default):
+class XByteField(ByteField):
+    def i2repr(self, pkt, x):
+class OByteField(ByteField):
+    def i2repr(self, pkt, x):
+class X3BytesField(XByteField):
+    def __init__(self, name, default):
+    def addfield(self, pkt, s, val):
+    def getfield(self, pkt, s):
+class ThreeBytesField(X3BytesField, ByteField):
+    def i2repr(self, pkt, x):
+class ShortField(Field):
+    def __init__(self, name, default):
+class SignedShortField(Field):
+    def __init__(self, name, default):
+class LEShortField(Field):
+    def __init__(self, name, default):
+class XShortField(ShortField):
+    def i2repr(self, pkt, x):
+class IntField(Field):
+    def __init__(self, name, default):
+class SignedIntField(Field):
+    def __init__(self, name, default):
+    def randval(self):
+class LEIntField(Field):
+    def __init__(self, name, default):
+class LESignedIntField(Field):
+    def __init__(self, name, default):
+    def randval(self):
+class XIntField(IntField):
+    def i2repr(self, pkt, x):
+class LongField(Field):
+    def __init__(self, name, default):
+class XLongField(LongField):
+    def i2repr(self, pkt, x):
+class IEEEFloatField(Field):
+    def __init__(self, name, default):
+class IEEEDoubleField(Field):
+    def __init__(self, name, default):
+class StrField(Field):
+    def __init__(self, name, default, fmt="H", remain=0):
+    def i2len(self, pkt, i):
+    def i2m(self, pkt, x):
+    def addfield(self, pkt, s, val):
+    def getfield(self, pkt, s):
+    def randval(self):
+class PacketField(StrField):
+    def __init__(self, name, default, cls, remain=0):
+    def i2m(self, pkt, i):
+    def m2i(self, pkt, m):
+    def getfield(self, pkt, s):
+class PacketLenField(PacketField):
+    def __init__(self, name, default, cls, length_from=None):
+    def getfield(self, pkt, s):
+class PacketListField(PacketField):
+    def __init__(self, name, default, cls, count_from=None, length_from=None):
+    def any2i(self, pkt, x):
+    def i2count(self, pkt, val):
+    def i2len(self, pkt, val):
+    def do_copy(self, x):
+    def getfield(self, pkt, s):
+    def addfield(self, pkt, s, val):
+class StrFixedLenField(StrField):
+    def __init__(self, name, default, length=None, length_from=None):
+    def i2repr(self, pkt, v):
+    def getfield(self, pkt, s):
+    def addfield(self, pkt, s, val):
+    def randval(self):
+class StrFixedLenEnumField(StrFixedLenField):
+    def __init__(self, name, default, length=None, enum=None, length_from=None):
+    def i2repr(self, pkt, v):
+class NetBIOSNameField(StrFixedLenField):
+    def __init__(self, name, default, length=31):
+    def i2m(self, pkt, x):
+    def m2i(self, pkt, x):
+class StrLenField(StrField):
+    def __init__(self, name, default, fld=None, length_from=None):
+    def getfield(self, pkt, s):
+class BoundStrLenField(StrLenField):
+    def __init__(self,name, default, minlen= 0, maxlen= 255, fld=None, length_from=None):
+    def randval(self):
+class FieldListField(Field):
+    def __init__(self, name, default, field, length_from=None, count_from=None):
+    def i2count(self, pkt, val):
+    def i2len(self, pkt, val):
+    def i2m(self, pkt, val):
+    def any2i(self, pkt, x):
+    def i2repr(self, pkt, x):
+    def addfield(self, pkt, s, val):
+    def getfield(self, pkt, s):
+class FieldLenField(Field):
+    def __init__(self, name, default,  length_of=None, fmt = "H", count_of=None, adjust=lambda
+pkt,x:x, fld=None):
+    def i2m(self, pkt, x):
+class StrNullField(StrField):
+    def addfield(self, pkt, s, val):
+    def getfield(self, pkt, s):
+    def randval(self):
+class StrStopField(StrField):
+    def __init__(self, name, default, stop, additionnal=0):
+    def getfield(self, pkt, s):
+    def randval(self):
+class LenField(Field):
+    def i2m(self, pkt, x):
+class BCDFloatField(Field):
+    def i2m(self, pkt, x):
+    def m2i(self, pkt, x):
+class BitField(Field):
+    def __init__(self, name, default, size):
+    def reverse(self, val):
+    def addfield(self, pkt, s, val):
+    def getfield(self, pkt, s):
+    def randval(self):
+class BitFieldLenField(BitField):
+    def __init__(self, name, default, size, length_of=None, count_of=None, adjust=lambda pkt,x:x):
+    def i2m(self, pkt, x):
+class XBitField(BitField):
+    def i2repr(self, pkt, x):
+class EnumField(Field):
+    def __init__(self, name, default, enum, fmt = "H"):
+    def any2i_one(self, pkt, x):
+    def i2repr_one(self, pkt, x):
+    def any2i(self, pkt, x):
+    def i2repr(self, pkt, x):
+class CharEnumField(EnumField):
+    def __init__(self, name, default, enum, fmt = "1s"):
+    def any2i_one(self, pkt, x):
+class BitEnumField(BitField,EnumField):
+    def __init__(self, name, default, size, enum):
+    def any2i(self, pkt, x):
+    def i2repr(self, pkt, x):
+class ShortEnumField(EnumField):
+    def __init__(self, name, default, enum):
+class LEShortEnumField(EnumField):
+    def __init__(self, name, default, enum):
+class ByteEnumField(EnumField):
+    def __init__(self, name, default, enum):
+class IntEnumField(EnumField):
+    def __init__(self, name, default, enum):
+class SignedIntEnumField(EnumField):
+    def __init__(self, name, default, enum):
+    def randval(self):
+class LEIntEnumField(EnumField):
+    def __init__(self, name, default, enum):
+class XShortEnumField(ShortEnumField):
+    def i2repr_one(self, pkt, x):
+class MultiEnumField(EnumField):
+    def __init__(self, name, default, enum, depends_on, fmt = "H"):
+    def any2i_one(self, pkt, x):
+    def i2repr_one(self, pkt, x):
+class BitMultiEnumField(BitField,MultiEnumField):
+    def __init__(self, name, default, size, enum, depends_on):
+    def any2i(self, pkt, x):
+    def i2repr(self, pkt, x):
+class ByteEnumKeysField(ByteEnumField):
+    def randval(self):
+class ShortEnumKeysField(ShortEnumField):
+    def randval(self):
+class IntEnumKeysField(IntEnumField):
+    def randval(self):
+class LELongField(Field):
+    def __init__(self, name, default):
+class LEFieldLenField(FieldLenField):
+    def __init__(self, name, default,  length_of=None, fmt = "<H", count_of=None, adjust=lambda
+pkt,x:x, fld=None):
+class FlagsField(BitField):
+    def __init__(self, name, default, size, names):
+    def any2i(self, pkt, x):
+    def i2repr(self, pkt, x):
+class FixedPointField(BitField):
+    def __init__(self, name, default, size, frac_bits=16):
+    def any2i(self, pkt, val):
+    def i2h(self, pkt, val):
+    def i2repr(self, pkt, val):
+class _IPPrefixFieldBase(Field):
+    def __init__(self, name, default, wordbytes, maxbytes, aton, ntoa, length_from):
+    def _numbytes(self, pfxlen):
+    def h2i(self, pkt, x):
+    def i2h(self, pkt, x):
+    def i2m(self, pkt, x):
+    def m2i(self, pkt, x):
+    def any2i(self, pkt, x):
+    def i2len(self, pkt, x):
+    def addfield(self, pkt, s, val):
+    def getfield(self, pkt, s):
+class IPPrefixField(_IPPrefixFieldBase):
+    def __init__(self, name, default, wordbytes=1, length_from= None):
+class IP6PrefixField(_IPPrefixFieldBase):
+    def __init__(self, name, default, wordbytes= 1, length_from= None):
+

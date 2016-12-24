@@ -1,0 +1,28 @@
+1. The pacp file has the link type saved. So, once the pcap file opened, the link type is
+retrieved.
+- function call rdPcap(file_name) --> initialize PcapReader--> RawPcapReader --> read int the pcap
+  header and determin the L2 type inside the header
+2. call PcapReader.read_all() to reading all packets 
+3. for each packet
+    - read int the raw packet, create the L2 packet type as abtained above.
+    - pass the packet raw data and deco it
+       p = self.LLcls(s) is to create the packet and deco it
+        - it will call __new__ 
+            - inside __new__ it will call L2 type's dispatch_hook 
+              the hook is to determine if it is really Ether not other variations
+            - the default __new__ is called (can't trace into it)
+        - __init__ is called to initialize the L2 packet first
+            - init_field --> fill all L2 packet fields (from self.fields_desc)
+            - dissect the packet --> call do_dissect
+                - get the L2 field values
+            - do_dissect_payload --> deco the reminding L2 payload 
+                - the call guess_payload_class to determine the lower layer (based on
+                  self.payload_guess (built before during the class construction)
+                - create L3  packet by type (in this case IP)
+ 
+
+
+
+
+
+

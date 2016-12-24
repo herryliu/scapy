@@ -1,0 +1,67 @@
+============= base classes ========
+class Gen(object):
+class SetGen(Gen):
+class Net(Gen):
+class OID(Gen):
+class Packet_metaclass(type):
+class NewDefaultValues(Packet_metaclass):
+class BasePacket(Gen):
+class BasePacketList:
+
+=============== Packet ===================
+class RawVal:
+class Packet(BasePacket):
+class NoPayload(Packet):
+class Raw(Packet):
+class Padding(Raw):
+def bind_bottom_up(lower, upper, __fval=None, **fval):
+def bind_top_down(lower, upper, __fval=None, **fval):
+def bind_layers(lower, upper, __fval=None, **fval):
+def split_bottom_up(lower, upper, __fval=None, **fval):
+def split_top_down(lower, upper, __fval=None, **fval):
+def split_layers(lower, upper, __fval=None, **fval):
+def ls(obj=None):
+def fuzz(p, _inplace=0):
+
+=============== IPv4 layers =====================
+class IPTools:
+class _IPOption_HDR(Packet):
+class IPOption(Packet):
+class IPOption_EOL(IPOption):
+class IPOption_NOP(IPOption):
+class IPOption_Security(IPOption):
+class IPOption_LSRR(IPOption):
+class IPOption_RR(IPOption_LSRR):
+class IPOption_SSRR(IPOption_LSRR):
+class IPOption_Stream_Id(IPOption):
+class IPOption_MTU_Probe(IPOption):
+class IPOption_MTU_Reply(IPOption_MTU_Probe):
+class IPOption_Traceroute(IPOption):
+class IPOption_Address_Extension(IPOption):
+class IPOption_Router_Alert(IPOption):
+class IPOption_SDBM(IPOption):
+class TCPOptionsField(StrField):
+class ICMPTimeStampField(IntField):
+class IP(Packet, IPTools):
+class TCP(Packet):
+class UDP(Packet):
+class ICMP(Packet):
+class IPerror(IP):
+class TCPerror(TCP):
+class UDPerror(UDP):
+class ICMPerror(ICMP):
+def fragment(pkt, fragsize=1480):
+def overlap_frag(p, overlap, fragsize=8, overlap_fragsize=None):
+def defrag(plist):
+def defragment(plist):
+def _packetlist_timeskew_graph(self, ip, **kargs):
+class TracerouteResult(SndRcvList):
+def traceroute(target, dport=80, minttl=1, maxttl=30, sport=RandShort(), l4 = None, filter=None,
+timeout=2, verbose=None, **kargs):
+class TCP_client(Automaton):
+def report_ports(target, ports):
+def IPID_count(lst, funcID=lambda x:x[1].id, funcpres=lambda x:x[1].summary()):
+def fragleak(target,sport=123, dport=123, timeout=0.2, onlyasc=0):
+def fragleak2(target, timeout=0.4, onlyasc=0):
+h
+
